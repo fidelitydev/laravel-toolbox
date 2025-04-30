@@ -1,0 +1,103 @@
+## Ref: http://www.gitalias.com/
+## Ref: https://github.com/GitAlias/gitalias
+## Ref: https://haacked.com/archive/2014/07/28/github-flow-aliases/
+
+[include]
+path = ../.console
+
+[alias]
+#save progress (commit)
+save = !"git cmd git/save $1 #"
+
+#fetch
+test = !echo "It works!"
+
+#setproject or setconfig
+cmd = !".console/cmd $@ #"
+
+# -------------------------
+# ---- GIT ----
+#get a branch
+getb = !"git cmd git/getb $1 #"
+
+#alias to getb
+setb = !"git cmd git/setb $1 $2 #"
+
+#remove/close current branch
+closeb = !"git cmd git/closeb"
+
+# open a PR
+pr = !"git cmd git/pr $1 #"
+
+# remove all local branch except the current
+purgelocalbranches = !"git cmd git/purge-branches"
+
+# alias to remove all local branch
+purgelocal = !git purgelocalbranches
+
+fixphp = !"git cmd git/fixphp"
+phpfix = !"git cmd git/fixphp"
+copyhooks = !"cp ./.console/git/extra/hooks/* .git/hooks/ && chmod +x .git/hooks/*"
+setcommands = !"bash .console/git/extra/install-git-cmd.sh"
+
+# -------------------------
+# ---- NPM ----
+#run the standard installation process
+render = !"git cmd npm/render"
+build = !"node ./.console/npm/build.cjs $1 #"
+
+# -------------------------
+# ---- COMPOSER ----
+#run composer compile
+compile = !"git cmd composer/compile $1 #"
+composer = !"git compile $1 #"
+
+# -------------------------
+# ---- Vite ----
+vite-config = !"git cmd vite/set-config $1 #"
+
+# -------------------------
+# ---- DOCKER ----
+# All these are meant to be run from the host machine, not from within the container
+docker = !"git cmd docker/dockercmds $@ #"
+docker-cmd = !"git cmd docker/dockercmds $@ #"
+docker-restart = !"git docker-cmd --restart"
+docker-down = !"git cmd docker/dockerdown $@ #"
+docker-up = !"git cmd docker/dockerup $@ #"
+docker-bash = !"git docker-cmd --bash"
+docker-git = !"git docker-cmd --git"
+docker-dir = !"git docker-cmd --dir"
+docker-composer = !"git docker-cmd --composer"
+docker-compose = !"git docker-cmd --composer"
+docker-clean = !"docker builder prune -f && docker network prune -f"
+docker-purge = !"git docker-clean"
+docker-rmi = !"git cmd docker/remove_image"
+docker-rmv = !"git cmd docker/remove_volume"
+
+# -------------------------
+# ---- SERVER ----
+server-env = !"git cmd server/set__env $1 #"
+server-docker = !"git cmd server/set__docker $1 #"
+server-htaccess = !"git cmd server/set__htaccess $1 #"
+
+# -------------------------
+# ---- LARAVEL ----
+#run the standard installation process
+laravel-build = !"git cmd laravel/build"
+# refresh laravel artifacts
+laravel-cycleapp = !"git cmd laravel/cycleapp"
+# flush the session
+laravel-sysflush = !"git cmd laravel/sysflush"
+# run migrations ops
+laravel-migrate = !"git cmd laravel/migrate $1 #"
+laravel-publish = !php artisan vendor:publish
+laravel-test = !php artisan app:run-test
+
+laravel-octane = !php artisan octane:start --watch
+laravel-octaneup = !php artisan octane:start
+laravel-serve = !php artisan serve
+laravel-server = !php artisan serve
+
+# -------------------------
+# ---- help ----
+commands = !cat git cmd commands.txt

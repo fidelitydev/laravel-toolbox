@@ -1,0 +1,88 @@
+/.*
+/.gitconfig
+/.console
+# Sensitive files
+.*
+**/.*
+.env
+**/.db.cnf
+.aws
+.ssh
+auth.json
+.env.*
+!.env.example
+.docker
+,console
+.gitcommands
+
+phpunit.xml
+phpcs.xml
+phpcs.php
+pint.json
+
+# -----------------------------------------
+# Overrides
+# -----------------------------------------
+!.gitignore
+!.gitconfig
+!.gitattributes
+!.dockerignore
+!.global--gitconfig
+!.install
+!.installer__files
+!.installer__files/*
+!.installer__files/.*
+!.installer__files/**/*
+!.installer__files/**/.*
+!README.md
+!reset
+!test.sh
+
+# -----------------------------------------
+# Other
+# -----------------------------------------
+# Build artifacts
+vendor
+**/vendor
+node_modules
+**/node_modules
+
+# setting files
+*.cache
+/.vscode
+
+# OS meta files
+.DS_Store
+**/.DS_Store
+*.bak
+_notes/
+*.orig
+
+# Application artifacts
+error_log
+**/cache/*
+/storage/*.key
+/storage/exports/
+/storage/framework/sessions/*
+**/logs
+logs/*
+**/error_log*
+*.log
+**/*.log
+*.local
+
+# phpDocumentor
+.phpdoc/
+/phpdoc/*
+*.phar
+rr
+
+# public files
+/public/build
+/public/hot
+/public/storage
+**/wp-admin
+**/wp-includes
+**/wp-*.php
+dist-ssr
+coverage
