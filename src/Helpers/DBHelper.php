@@ -23,19 +23,40 @@ class DBHelper
      */
     public static function getEnum(string $table, string $column): array
     {
-        $type = DB::select(DB::raw("SHOW COLUMNS FROM $table WHERE Field = '$column'"))[0]->Type;
-        preg_match('/^enum\((.*)\)$/', $type, $matches);
-        $enum = [];
+        $driver = DB::getDriverName();
 
-        if (!empty($matches)) {
-            foreach (explode(',', $matches[1]) as $value) {
-                $v = trim($value, "'");
-                $enum = Arr::add($enum, $v, $v);
-            }
+        switch ($driver) {
+            case 'mysql':
+                $type = DB::selectOne(
+                    "SHOW COLUMNS FROM `$table` WHERE Field = ?", [$column]
+                )->Type;
+                preg_match('/^enum\((.*)\)$/', $type, $matches);
+                return $matches
+                    ? array_map(fn($v) => trim($v, "'"), explode(',', $matches[1]))
+                    : [];
+
+            case 'pgsql':
+                // PostgreSQL: enums are real types
+                return DB::table('pg_type as t')
+                    ->join('pg_enum as e', 't.oid', '=', 'e.enumtypid')
+                    ->join('pg_catalog.pg_namespace as n', 'n.oid', '=', 't.typnamespace')
+                    ->where('t.typname', $column) // assumes enum type matches column name
+                    ->pluck('e.enumlabel')
+                    ->toArray();
+
+            case 'sqlite':
+                // SQLite: extract from CHECK constraints
+                $sql = DB::selectOne("SELECT sql FROM sqlite_master WHERE tbl_name = ? AND type = 'table'", [$table])->sql ?? '';
+                if (preg_match("/$column\s+\w+\s+CHECK\s*\(\s*$column\s+IN\s*\(([^)]+)\)\)/i", $sql, $matches)) {
+                    return array_map(fn($v) => trim($v, " '\""), explode(',', $matches[1]));
+                }
+                return [];
+
+            default:
+                return [];
         }
-        //add key #'s
-        return array_values($enum);
     }
+
 
 
     /**
