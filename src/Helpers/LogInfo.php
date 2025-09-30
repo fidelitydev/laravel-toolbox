@@ -11,10 +11,10 @@ class LogInfo
      * write the message
      *
      * @param string $msg
-     * @param string $doc
+     * @param string|null $doc
      * @return void
      */
-    public static function write($msg, $doc = 'info'): void
+    public static function write(string $msg, ?string $doc = 'info'): void
     {
         $formatMsg = self::setMsg($msg);
         self::save($formatMsg, $doc);
@@ -24,10 +24,10 @@ class LogInfo
      * Alias to write
      *
      * @param string $msg
-     * @param string $doc
+     * @param string|null $doc
      * @return void
      */
-    public static function info($msg, $doc = 'info'): void
+    public static function info(string $msg, ?string $doc = 'info'): void
     {
         self::write($msg, $doc);
     }
@@ -36,12 +36,15 @@ class LogInfo
     /**
      * write the error
      *
-     * @param object $exception
-     * @param string $doc
+     * @param object|string $exception
+     * @param string|null $doc
      * @return void
      */
-    public static function error($exception, $doc = 'errors'): void
+    public static function error(string|object $exception, ?string $doc = 'errors'): void
     {
+        if (! $exception instanceof \Exception) {
+            $exception = new \Exception($exception);
+        }
         $formatMsg = self::setError($exception);
         self::save($formatMsg, $doc);
     }
