@@ -36,11 +36,13 @@ class LogInfo
     /**
      * write the error
      *
-     * @param object|string $exception
+     * @param object|\Exception $exception
+     * @param array $context the context of the error
+     * @param bool $throw whether to re-throw the exception after logging
      * @param string|null $doc
      * @return void
      */
-    public static function error(string|object $exception, array $context = [], ?string $doc = 'errors', ?bool $throw = false): void
+    public static function error(string|\Exception $exception, array $context = [], ?string $doc = 'errors', ?bool $throw = false): void
     {
         $context = !empty($context) ? ' | Context: ' . print_r($context, true) : '';
         if (! $exception instanceof \Exception) {
