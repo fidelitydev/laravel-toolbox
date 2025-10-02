@@ -40,7 +40,7 @@ class LogInfo
      * @param string|null $doc
      * @return void
      */
-    public static function error(string|object $exception, array $context = [], ?string $doc = 'errors'): void
+    public static function error(string|object $exception, array $context = [], ?string $doc = 'errors', ?bool $throw = false): void
     {
         $context = !empty($context) ? ' | Context: ' . print_r($context, true) : '';
         if (! $exception instanceof \Exception) {
@@ -48,6 +48,9 @@ class LogInfo
         }
         $formatMsg = self::setError($exception);
         self::save($formatMsg, $doc);
+        if ($throw) {
+            throw $exception;
+        }
     }
 
 
