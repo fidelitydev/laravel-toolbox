@@ -8,7 +8,6 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Bus\Queueable;
 use Storage;
-use Illuminate\Support\Str;
 use Carbon\Carbon;
 
 class LogInfoLogger implements ShouldQueue
@@ -53,8 +52,9 @@ class LogInfoLogger implements ShouldQueue
         $date = Carbon::now()->toDateString();
 
         Storage::disk('log')->prepend("/$date/$doc.txt", $msg);
-
-        $msg = '---->' . $doc . (Str::limit($msg, 500)) . "\r\n\r\n";
-        Storage::disk('log')->prepend("$date.'__APP--Hourly--Log.txt", $msg);
+        $sep = str_repeat('=', 50);
+        $formattedMsg  = PHP_EOL . PHP_EOL . $sep . PHP_EOL . PHP_EOL;
+        $formattedMsg .= '----> ' . (string)$doc . ' ' . (string)$msg . PHP_EOL . PHP_EOL . $sep . PHP_EOL . PHP_EOL;
+        Storage::disk('log')->prepend("$date.'--Hourly--Log.txt", $formattedMsg);
     }
 }
